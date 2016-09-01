@@ -61,6 +61,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
     
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     [DDLog addLogger:fileLogger];
+	DDLogInfo(@"log file at: %@", [[fileLogger currentLogFileInfo] filePath]);
 	
     [SDLDebugTool logInfo:@"SDLIAPTransport Init"];
 	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init");
