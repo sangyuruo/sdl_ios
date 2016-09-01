@@ -350,8 +350,8 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         if (len > 0) {
             NSString *logMessage = [NSString stringWithFormat:@"Switching to protocol %@", [@(buf[0]) stringValue]];
             [SDLDebugTool logInfo:logMessage];
-			DDLogInfo(@"[DDLogInfo]data len is %ul" , len );
-			[SDLDebugTool logInfo:(@"DDLogInfo]data len is %ul",len)];
+			DDLogInfo(@"[DDLogInfo]data len is %lul" , len );
+			[SDLDebugTool logInfo:[NSString stringWithFormat:@"[DDLogInfo]data len is %lul",len]];
             // Destroy the control session
             [strongSelf.protocolIndexTimer cancel];
             [strongSelf.controlSession stop];
