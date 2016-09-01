@@ -54,15 +54,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         [self startEventListening];
         [SDLSiphonServer init];
     }
-
-	DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
-    fileLogger.rollingFrequency = 660 * 660 * 24; // 24 hour rolling
-    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
-    
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    [DDLog addLogger:fileLogger];
-	DDLogInfo(@"log file at: %@", [[fileLogger currentLogFileInfo] filePath]);
-	
+   
     [SDLDebugTool logInfo:@"SDLIAPTransport Init"];
 	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init");
     return self;
@@ -423,6 +415,8 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
             NSData *dataIn = [NSData dataWithBytes:buf length:bytesRead];
 
             if (bytesRead > 0) {
+				[SDLDebugTool logInfo:[NSString stringWithFormat:@"[SDLIAPTransport]max size is:%lu" ,[SDLGlobals globals].maxMTUSize]];
+				[SDLDebugTool logInfo:[NSString stringWithFormat:@"[SDLIAPTransport]bytesRead is:%lu" ,bytesRead]];
 				DDLogInfo(@"[DDLogInfo]max size is:%lu" ,[SDLGlobals globals].maxMTUSize );
                 DDLogInfo(@"[DDLogInfo]bytesRead is:%lu" ,bytesRead );
                 [strongSelf.delegate onDataReceived:dataIn];
