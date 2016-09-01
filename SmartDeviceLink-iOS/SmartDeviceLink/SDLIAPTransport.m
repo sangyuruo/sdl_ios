@@ -350,8 +350,10 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         if (len > 0) {
             NSString *logMessage = [NSString stringWithFormat:@"Switching to protocol %@", [@(buf[0]) stringValue]];
             [SDLDebugTool logInfo:logMessage];
-			DDLogInfo(@"[DDLogInfo]data len is %lul" , len );
-			[SDLDebugTool logInfo:[NSString stringWithFormat:@"[DDLogInfo]data len is %lul",len]];
+			
+			NSMutableString *logMessage2 = [NSMutableString stringWithFormat:@"DDLogInfo:data len is %lul",len];
+			[SDLDebugTool logInfo:logMessage2 withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
+ 
             // Destroy the control session
             [strongSelf.protocolIndexTimer cancel];
             [strongSelf.controlSession stop];
@@ -415,11 +417,14 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
             NSData *dataIn = [NSData dataWithBytes:buf length:bytesRead];
 
             if (bytesRead > 0) {
-				[SDLDebugTool logInfo:[NSString stringWithFormat:@"[SDLIAPTransport]max size is:%lu" ,[SDLGlobals globals].maxMTUSize]];
-				[SDLDebugTool logInfo:[NSString stringWithFormat:@"[SDLIAPTransport]bytesRead is:%lu" ,bytesRead]];
-				DDLogInfo(@"[DDLogInfo]max size is:%lu" ,[SDLGlobals globals].maxMTUSize );
-                DDLogInfo(@"[DDLogInfo]bytesRead is:%lu" ,bytesRead );
-                [strongSelf.delegate onDataReceived:dataIn];
+				[SDLDebugTool logInfo:@"SDLIAPTransport onDataReceived"];
+				
+				NSMutableString *logMessage = [NSMutableString stringWithFormat:@"SDLIAPTransport, max size is:%lu",[SDLGlobals globals].maxMTUSize];
+				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
+				NSMutableString *logMessage2 = [NSMutableString stringWithFormat:@"SDLIAPTransport, bytesRead is:%lu",bytesRead];
+				[SDLDebugTool logInfo:logMessage2 withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
+
+				[strongSelf.delegate onDataReceived:dataIn];
             } else {
                 break;
             }
