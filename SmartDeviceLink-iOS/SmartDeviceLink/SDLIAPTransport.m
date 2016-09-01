@@ -55,6 +55,13 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         [SDLSiphonServer init];
     }
 
+	DDFileLogger *fileLogger = [[DDFileLogger alloc] init];
+    fileLogger.rollingFrequency = 660 * 660 * 24; // 24 hour rolling
+    fileLogger.logFileManager.maximumNumberOfLogFiles = 7;
+    
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    [DDLog addLogger:fileLogger];
+	
     [SDLDebugTool logInfo:@"SDLIAPTransport Init"];
 	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init");
     return self;
