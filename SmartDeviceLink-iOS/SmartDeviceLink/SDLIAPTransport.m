@@ -15,7 +15,7 @@
 #import "SDLTimer.h"
 #import "SDLIAPSession.h"
 #import <CommonCrypto/CommonDigest.h>
-
+@import CocoaLumberjack;
 
 NSString *const legacyProtocolString = @"com.ford.sync.prot0";
 NSString *const controlProtocolString = @"com.smartdevicelink.prot0";
@@ -39,6 +39,7 @@ int const streamOpenTimeoutSeconds = 2;
 
 
 @implementation SDLIAPTransport
+static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -401,6 +402,8 @@ int const streamOpenTimeoutSeconds = 2;
             NSData *dataIn = [NSData dataWithBytes:buf length:bytesRead];
 
             if (bytesRead > 0) {
+				DDLogInfo(@"max size is:%lu" ,[SDLGlobals globals].maxMTUSize );
+                DDLogInfo(@"bytesRead is:%lu" ,bytesRead );
                 [strongSelf.delegate onDataReceived:dataIn];
             } else {
                 break;
