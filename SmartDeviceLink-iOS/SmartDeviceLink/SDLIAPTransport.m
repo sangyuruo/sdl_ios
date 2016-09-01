@@ -56,7 +56,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
     }
 
     [SDLDebugTool logInfo:@"SDLIAPTransport Init"];
-	DDLogInfo(@"SDLIAPTransport Init");
+	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init");
     return self;
 }
 
@@ -64,7 +64,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 #pragma mark - Notification Subscriptions
 
 - (void)startEventListening {
-	DDLogInfo(@"SDLIAPTransport Listening For Events");
+	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Listening For Events");
     [SDLDebugTool logInfo:@"SDLIAPTransport Listening For Events"];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(accessoryConnected:)
@@ -88,7 +88,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 }
 
 - (void)stopEventListening {
-	DDLogInfo(@"SDLIAPTransport Stopped Listening For Events");
+	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Stopped Listening For Events");
     [SDLDebugTool logInfo:@"SDLIAPTransport Stopped Listening For Events"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -98,7 +98,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 - (void)accessoryConnected:(NSNotification *)notification {
     NSMutableString *logMessage = [NSMutableString stringWithFormat:@"Accessory Connected, Opening in %0.03fs", self.retryDelay];
     [SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
-	DDLogInfo(@"accessoryConnected");
+	DDLogInfo(@"[DDLogInfo]accessoryConnected");
     self.retryCounter = 0;
     [self performSelector:@selector(connect) withObject:nil afterDelay:self.retryDelay];
 }
@@ -139,17 +139,17 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         self.sessionSetupInProgress = YES;
         [self establishSession];
     } else if (self.session) {
-		DDLogInfo(@"Session already established");
+		DDLogInfo(@"[DDLogInfo]Session already established");
         [SDLDebugTool logInfo:@"Session already established."];
     } else {
-		DDLogInfo(@"Session setup already in progress");
+		DDLogInfo(@"[DDLogInfo]Session setup already in progress");
         [SDLDebugTool logInfo:@"Session setup already in progress."];
     }
 }
 
 - (void)disconnect {
     [SDLDebugTool logInfo:@"IAP Disconnecting" withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
-	DDLogInfo(@"IAP Disconnecting");
+	DDLogInfo(@"[DDLogInfo]IAP Disconnecting");
     // Only disconnect the data session, the control session does not stay open and is handled separately
     if (self.session != nil) {
         [self.session stop];
@@ -162,7 +162,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 - (void)establishSession {
     [SDLDebugTool logInfo:@"Attempting To Connect"];
-	DDLogInfo(@"Attempting To Connect");
+	DDLogInfo(@"[DDLogInfo]Attempting To Connect");
     if (self.retryCounter < createSessionRetries) {
         // We should be attempting to connect
         self.retryCounter++;
@@ -187,7 +187,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 - (void)createIAPControlSessionWithAccessory:(EAAccessory *)accessory {
     [SDLDebugTool logInfo:@"Starting MultiApp Session"];
-	DDLogInfo(@"Starting MultiApp Session");
+	DDLogInfo(@"[DDLogInfo]Starting MultiApp Session");
     self.controlSession = [[SDLIAPSession alloc] initWithAccessory:accessory forProtocol:controlProtocolString];
 
     if (self.controlSession) {
@@ -229,7 +229,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 - (void)createIAPDataSessionWithAccessory:(EAAccessory *)accessory forProtocol:(NSString *)protocol {
     [SDLDebugTool logInfo:@"Starting Data Session"];
-	DDLogInfo(@"Starting Data Session");
+	DDLogInfo(@"[DDLogInfo]Starting Data Session");
     self.session = [[SDLIAPSession alloc] initWithAccessory:accessory forProtocol:protocol];
     if (self.session) {
         self.session.delegate = self;
@@ -241,7 +241,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         ioStreamDelegate.streamErrorHandler = [self dataStreamErroredHandler];
 
         if (![self.session start]) {
-			DDLogInfo(@"Data Session Failed");
+			DDLogInfo(@"[DDLogInfo]Data Session Failed");
             [SDLDebugTool logInfo:@"Data Session Failed"];
             self.session.streamDelegate = nil;
             self.session = nil;
@@ -249,7 +249,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         }
     } else {
         [SDLDebugTool logInfo:@"Failed MultiApp Data SDLIAPSession Initialization"];
-        DDLogInfo(@"Failed MultiApp Data SDLIAPSession Initialization");
+        DDLogInfo(@"[DDLogInfo]Failed MultiApp Data SDLIAPSession Initialization");
 		[self retryEstablishSession];
     }
 }
@@ -264,7 +264,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
     // Control Session Opened
     if ([controlProtocolString isEqualToString:session.protocol]) {
         [SDLDebugTool logInfo:@"Control Session Established"];
-		DDLogInfo(@"Control Session Established");
+		DDLogInfo(@"[DDLogInfo]Control Session Established");
         [self.protocolIndexTimer start];
     }
 
@@ -272,7 +272,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
     if (![controlProtocolString isEqualToString:session.protocol]) {
         self.sessionSetupInProgress = NO;
         [SDLDebugTool logInfo:@"Data Session Established"];
-		DDLogInfo(@"Control Session Established");
+		DDLogInfo(@"[DDLogInfo]Control Session Established");
         [self.delegate onTransportConnected];
     }
 }
@@ -284,7 +284,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 - (void)onSessionStreamsEnded:(SDLIAPSession *)session {
     if (!self.session && [controlProtocolString isEqualToString:session.protocol]) {
         [SDLDebugTool logInfo:@"onSessionStreamsEnded"];
-		DDLogInfo(@"onSessionStreamsEnded");
+		DDLogInfo(@"[DDLogInfo]onSessionStreamsEnded");
         [session stop];
         [self retryEstablishSession];
     }
@@ -343,14 +343,14 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         typeof(self) strongSelf = weakSelf;
 
         [SDLDebugTool logInfo:@"Control Stream Received Data"];
-		DDLogInfo(@"Control Stream Received Data");
+		DDLogInfo(@"[DDLogInfo]Control Stream Received Data");
         // Read in the stream a single byte at a time
         uint8_t buf[1];
         NSUInteger len = [istream read:buf maxLength:1];
         if (len > 0) {
             NSString *logMessage = [NSString stringWithFormat:@"Switching to protocol %@", [@(buf[0]) stringValue]];
             [SDLDebugTool logInfo:logMessage];
-			DDLogInfo(@"data len is %ul" , len );
+			DDLogInfo(@"[DDLogInfo]data len is %ul" , len );
 
             // Destroy the control session
             [strongSelf.protocolIndexTimer cancel];
@@ -415,8 +415,8 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
             NSData *dataIn = [NSData dataWithBytes:buf length:bytesRead];
 
             if (bytesRead > 0) {
-				DDLogInfo(@"max size is:%lu" ,[SDLGlobals globals].maxMTUSize );
-                DDLogInfo(@"bytesRead is:%lu" ,bytesRead );
+				DDLogInfo(@"[DDLogInfo]max size is:%lu" ,[SDLGlobals globals].maxMTUSize );
+                DDLogInfo(@"[DDLogInfo]bytesRead is:%lu" ,bytesRead );
                 [strongSelf.delegate onDataReceived:dataIn];
             } else {
                 break;
