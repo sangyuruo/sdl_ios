@@ -293,14 +293,15 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 #pragma mark - Data Transmission
 
-- (void)sendData:(NSData *)data {
+- (void)
+:(NSData *)data {
     dispatch_async(_transmit_queue, ^{
         NSOutputStream *ostream = self.session.easession.outputStream;
         NSMutableData *remainder = data.mutableCopy;
 
         while (remainder.length != 0) {
             if (ostream.streamStatus == NSStreamStatusOpen && ostream.hasSpaceAvailable) {
-                NSMutableString *logMessage = [NSMutableString stringWithFormat:@"sendData size is @lu", remainder.length];
+                NSMutableString *logMessage = [NSMutableString stringWithFormat:@"sendData size is %lu", remainder.length];
 				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
 				NSInteger bytesWritten = [ostream write:remainder.bytes maxLength:remainder.length];
 				
