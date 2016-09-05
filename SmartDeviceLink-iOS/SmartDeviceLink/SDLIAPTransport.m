@@ -307,8 +307,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
                     [SDLDebugTool logInfo:[NSString stringWithFormat:@"Error: %@", [ostream streamError]] withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All];
                     break;
                 }
-				
-				NSMutableString *logMessage = [NSMutableString stringWithFormat:@"sendData size is %lu", bytesWritten];
+				NSMutableString *logMessage = [NSMutableString stringWithFormat:@"SDLIAPTransport, sendData size is:%lu",bytesWritten];  
 				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
 				
                 [remainder replaceBytesInRange:NSMakeRange(0, bytesWritten) withBytes:NULL length:0];
