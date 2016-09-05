@@ -300,9 +300,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
         while (remainder.length != 0) {
             if (ostream.streamStatus == NSStreamStatusOpen && ostream.hasSpaceAvailable) {
-                NSMutableString *logMessage = [NSMutableString stringWithFormat:@"sendData size is @lu", remainder.length];
-				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
-				NSInteger bytesWritten = [ostream write:remainder.bytes maxLength:remainder.length];
+                NSInteger bytesWritten = [ostream write:remainder.bytes maxLength:remainder.length];
 				
                 if (bytesWritten == -1) {
                     [SDLDebugTool logInfo:[NSString stringWithFormat:@"Error: %@", [ostream streamError]] withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All];
