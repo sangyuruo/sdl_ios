@@ -55,7 +55,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         [SDLSiphonServer init];
     }
    
-    [SDLDebugTool logInfo:@"SDLIAPTransport Init, Version 1.2"];
+    [SDLDebugTool logInfo:@"SDLIAPTransport Init, Version 1.3"];
 	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init, Version 1");
     return self;
 }
