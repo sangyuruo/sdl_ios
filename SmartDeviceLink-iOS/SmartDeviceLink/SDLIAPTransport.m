@@ -55,7 +55,7 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
         [SDLSiphonServer init];
     }
    
-    [SDLDebugTool logInfo:@"SDLIAPTransport Init, Version 1.3"];
+    [SDLDebugTool logInfo:@"SDLIAPTransport Init, Version 1.4"];
 	DDLogInfo(@"[DDLogInfo]SDLIAPTransport Init, Version 1");
     return self;
 }
@@ -293,20 +293,22 @@ static NSUInteger LOG_LEVEL_DEF = DDLogLevelDebug;
 
 #pragma mark - Data Transmission
 
-- (void)
-:(NSData *)data {
+- (void)sendData:(NSData *)data {
     dispatch_async(_transmit_queue, ^{
         NSOutputStream *ostream = self.session.easession.outputStream;
         NSMutableData *remainder = data.mutableCopy;
 
         while (remainder.length != 0) {
             if (ostream.streamStatus == NSStreamStatusOpen && ostream.hasSpaceAvailable) {
-                NSInteger bytesWritten = [ostream write:remainder.bytes maxLength:remainder.length];
+                NSMutableString *logMessage = [NSMutableString stringWithFormat:@"sendData size is @lu", remainder.length];
+				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
+				NSInteger bytesWritten = [ostream write:remainder.bytes maxLength:remainder.length];
 				
                 if (bytesWritten == -1) {
                     [SDLDebugTool logInfo:[NSString stringWithFormat:@"Error: %@", [ostream streamError]] withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All];
                     break;
                 }
+				
 				NSMutableString *logMessage = [NSMutableString stringWithFormat:@"SDLIAPTransport, sendData size is:%lu",bytesWritten];  
 				[SDLDebugTool logInfo:logMessage withType:SDLDebugType_Transport_iAP toOutput:SDLDebugOutput_All toGroup:self.debugConsoleGroupName];
 				
