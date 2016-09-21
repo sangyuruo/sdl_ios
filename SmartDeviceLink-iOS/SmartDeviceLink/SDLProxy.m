@@ -504,7 +504,9 @@ const int POLICIES_CORRELATION_ID = 65535;
 }
 
 - (void)handleSystemRequestLockScreenIconURL:(SDLOnSystemRequest *)request {
-    [[SDLURLSession defaultSession] dataFromURL:[NSURL URLWithString:request.url]
+    	NSMutableString *logMessage = [NSMutableString stringWithFormat:@"handleSystemRequestLockScreenIconURL:url is %@",request.url];
+    	[SDLDebugTool logInfo:logMessage withType:SDLDebugType_RPC toOutput:SDLDebugOutput_All toGroup:_debugConsoleGroupName];
+	[[SDLURLSession defaultSession] dataFromURL:[NSURL URLWithString:request.url]
                               completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                                   if (error != nil) {
                                       NSString *logMessage = [NSString stringWithFormat:@"OnSystemRequest failure (HTTP response), download task failed: %@", error.localizedDescription];
